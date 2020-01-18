@@ -3,12 +3,36 @@
 {% block title %}To-Do List{% endblock %}
 {% block content %}
 
+{% if messages %}
+    {% for message in messages%}
+        <div class="alert alert-warning alert-dismissable" role="alert">
+            <button class="close" data-dismiss="alert">
+                <small><sup>x</sup></small>
+            </button>    
+            {{ message }}
+        </div>
+    {% endfor %}
+
+{% endif %}
+
     {% if all_items %}
-    <ul>
+    <table class="table table-bordered" >
         {% for things in all_items %}
-            <li>{{things.item}} | {{things.completed}}</li>
+            {% if things.completed %}
+                <tr class="table-secondary">
+                    <td class="striker"><a href="{% url 'edit' things.id %}">{{things.item}}</a></td> 
+                    <td><center><a class="btn btn-outline-dark" href="{% url 'uncross' things.id %}" role="button">Uncross</a></center</td>
+                    <td><center><a class="btn btn-outline-dark" href="{% url 'delete' things.id %}" role="button">Delete</a></center></td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td><a href="{% url 'edit' things.id %}">{{things.item}}</a></td> 
+                    <td><center><a class="btn btn-outline-primary" href="{% url 'cross_off' things.id %}" role="button">Cross Off</a></center></td>
+                    <td><center><a class="btn btn-outline-primary" href="{% url 'delete' things.id %}" role="button">Delete</a></center></td>
+                </tr>  
+            {% endif %}  
         {% endfor %}
-    <ul>    
+    </table>    
     {% endif %}
 
-{% endblock %}
+{% endblock %} 
